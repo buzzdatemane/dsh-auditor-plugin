@@ -195,7 +195,8 @@ dsh-auditor-plugin/
 проверка лицензии.
 
 Для старта без бюджета есть manual-режим: оплата в крипте напрямую, ключи
-выдаются локально, лендинг — на GitHub Pages ([site/index.html](site/index.html),
+выдаются локально, лендинг — на GitHub Pages:
+https://buzzdatemane.github.io/dsh-auditor-plugin/ ([site/index.html](site/index.html),
 workflow `.github/workflows/pages.yml`). Для заявок есть Telegram-бот на long
 polling: `npm run bot` (нужен токен BotFather; без HTTPS и webhook).
 

@@ -33,7 +33,7 @@ manual-лицензии; Pro-функции в разработке.
 ## Ссылки
 
 - GitHub: https://github.com/buzzdatemane/dsh-auditor-plugin
-- Landing: GitHub Pages URL после публикации `site/`
+- Landing: https://buzzdatemane.github.io/dsh-auditor-plugin/
 - Telegram bot: `https://t.me/<bot>` после создания
 - npm: `https://www.npmjs.com/package/dsh-auditor-plugin` после публикации
 
