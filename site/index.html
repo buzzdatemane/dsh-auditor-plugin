@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DSH Auditor — аудит безопасности DSH-плагинов</title>
+    <meta
+      name="description"
+      content="Ручной security-аудит DSH-плагинов: install-скрипты, зависимости, опасные API, доступ к файлам и сети. Оплата криптой."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">DSH <span>Auditor</span></div>
+      <a class="ghost" href="https://github.com/buzzdatemane/dsh-auditor-plugin">GitHub</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">РУЧНОЙ АУДИТ БЕЗОПАСНОСТИ</p>
+        <h1>Проверьте DSH-плагин до установки.</h1>
+        <p class="lead">
+          Read-only аудит install-скриптов, зависимостей, опасных API,
+          файлового и сетевого доступа. Отчёт с evidence и рекомендациями —
+          без запуска кода плагина.
+        </p>
+        <div class="hero-points">
+          <span>ручной разбор, не только regex</span>
+          <span>оплата USDT / BTC / Lightning</span>
+          <span>отчёт в Telegram</span>
+        </div>
+      </section>
+
+      <section class="pricing">
+        <div class="section-head">
+          <h2>Что можно заказать</h2>
+          <p>Без подписки и аккаунта. Сначала напиши, потом оплата.</p>
+        </div>
+        <div class="grid">
+          <article class="card primary">
+            <div class="card-top">
+              <h3>Аудит плагина</h3>
+              <span class="badge">доступно</span>
+            </div>
+            <div class="price">$20</div>
+            <p>Один DSH-плагин: install-скрипты, зависимости, child_process/eval/fs/network, отчёт и рекомендации.</p>
+            <ul>
+              <li>Markdown/PDF-отчёт</li>
+              <li>evidence по каждой находке</li>
+              <li>ответы на вопросы в Telegram</li>
+            </ul>
+            <!-- TODO: замени your_bot на username своего Telegram-бота -->
+            <a class="button" href="https://t.me/your_bot?start=site">Открыть бота</a>
+          </article>
+
+          <article class="card disabled">
+            <div class="card-top">
+              <h3>Pro ×10</h3>
+              <span class="badge soon">в разработке</span>
+            </div>
+            <div class="price">$9.90</div>
+            <p>10 годовых ключей Pro: CI-gate, policy, HTML/SARIF, обновляемые правила.</p>
+            <ul>
+              <li>10 отдельных ключей</li>
+              <li>1 разработчик на ключ</li>
+              <li>12 месяцев</li>
+            </ul>
+            <button disabled>Скоро</button>
+          </article>
+
+          <article class="card disabled">
+            <div class="card-top">
+              <h3>Team ×5</h3>
+              <span class="badge soon">в разработке</span>
+            </div>
+            <div class="price">$2.99</div>
+            <p>Один командный ключ на 5 разработчиков.</p>
+            <ul>
+              <li>5 мест</li>
+              <li>12 месяцев</li>
+              <li>приоритетная поддержка</li>
+            </ul>
+            <button disabled>Скоро</button>
+          </article>
+
+          <article class="card disabled">
+            <div class="card-top">
+              <h3>Lifetime</h3>
+              <span class="badge soon">в разработке</span>
+            </div>
+            <div class="price">$1.99</div>
+            <p>Бессрочный Pro-ключ для ранних покупателей.</p>
+            <ul>
+              <li>1 разработчик</li>
+              <li>без срока</li>
+              <li>первые 100 покупателей</li>
+            </ul>
+            <button disabled>Скоро</button>
+          </article>
+        </div>
+      </section>
+
+      <section class="how">
+        <h2>Как проходит аудит</h2>
+        <ol>
+          <li>Ты присылаешь имя плагина или ссылку на GitHub.</li>
+          <li>Я проверяю код статически, без запуска и установки.</li>
+          <li>Ты оплачиваешь USDT/BTC/Lightning после согласования объёма.</li>
+          <li>Получаешь отчёт с находками, score и рекомендациями в Telegram.</li>
+        </ol>
+      </section>
+
+      <section class="faq">
+        <h2>Вопросы</h2>
+        <details>
+          <summary>Почему ручной аудит, а не кнопка «купить»?</summary>
+          <p>На старте нет бюджета на платёжный сервис и хостинг. Ручной формат убирает ежемесячные расходы и комиссии платформ; оплата идёт напрямую.</p>
+        </details>
+        <details>
+          <summary>Что входит в отчёт?</summary>
+          <p>Install/postinstall-скрипты, известные опасные зависимости, child_process/eval/fs/network, evidence, risk score и рекомендации. Без гарантии «100% безопасно».</p>
+        </details>
+        <details>
+          <summary>Как оплатить?</summary>
+          <p>USDT (TRC20), BTC или Lightning. Адрес и сумма — в Telegram после согласования. Крипто-платежи необратимы; условия возврата обсуждаются до оплаты.</p>
+        </details>
+        <details>
+          <summary>Когда будет Pro?</summary>
+          <p>Pro-функции и проверка лицензии ещё в разработке. Сейчас можно заказать аудит; о запуске Pro сообщу в Telegram.</p>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <span>dsh-auditor-plugin · ручные продажи</span>
+      <span>только чтение · без запуска кода</span>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mock checkout — DSH Auditor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href="/">DSH <span>Auditor</span></a>
+      <span class="ghost">mock</span>
+    </header>
+    <main class="narrow">
+      <section class="panel">
+        <p class="eyebrow">ТЕСТОВЫЙ РЕЖИМ</p>
+        <h1>Mock checkout</h1>
+        <p class="lead">Это локальная имитация оплаты. Реальные деньги не списываются.</p>
+        <p class="muted" id="invoice"></p>
+        <button id="pay" type="button">Оплатить (mock)</button>
+        <p id="error" class="error" role="alert"></p>
+      </section>
+    </main>
+    <script>
+      const invoiceId = new URLSearchParams(location.search).get('invoice')
+      const invoice = document.querySelector('#invoice')
+      const button = document.querySelector('#pay')
+      const errorBox = document.querySelector('#error')
+      invoice.textContent = invoiceId ? `Invoice: ${invoiceId}` : 'Invoice не найден'
+
+      button.addEventListener('click', async () => {
+        button.disabled = true
+        button.textContent = 'Подтверждаем…'
+        try {
+          const response = await fetch('/api/mock/pay', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ invoiceId }),
+          })
+          const data = await response.json()
+          if (!response.ok) throw new Error(data.error || 'Ошибка оплаты')
+          window.location.href = `/success?order=${encodeURIComponent(data.orderId)}`
+        } catch (error) {
+          errorBox.textContent = error.message
+          button.disabled = false
+          button.textContent = 'Оплатить (mock)'
+        }
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Заказ — DSH Auditor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <a class="brand" href="/">DSH <span>Auditor</span></a>
+      <span class="ghost">Заказ</span>
+    </header>
+
+    <main class="narrow">
+      <section class="panel">
+        <p class="eyebrow">СТАТУС ЗАКАЗА</p>
+        <h1 id="title">Загрузка…</h1>
+        <p id="status" class="status">Проверяем оплату.</p>
+        <p id="order-id" class="muted"></p>
+        <p id="telegram" class="telegram"></p>
+        <div id="keys-wrap" hidden>
+          <div class="keys-head">
+            <h2>Ваши ключи</h2>
+            <button id="copy" class="ghost" type="button">Скопировать</button>
+          </div>
+          <pre id="keys"></pre>
+          <p class="muted">
+            Сохраните ключи. Каждый ключ активируется в dsh-auditor-plugin.
+          </p>
+        </div>
+        <p id="error" class="error" role="alert"></p>
+      </section>
+    </main>
+
+    <footer>
+      <a href="/">← На главную</a>
+      <span>dsh-auditor-plugin</span>
+    </footer>
+
+    <script>
+      const params = new URLSearchParams(location.search)
+      const orderId = params.get('order')
+      const title = document.querySelector('#title')
+      const status = document.querySelector('#status')
+      const orderLabel = document.querySelector('#order-id')
+      const telegram = document.querySelector('#telegram')
+      const keysWrap = document.querySelector('#keys-wrap')
+      const keys = document.querySelector('#keys')
+      const errorBox = document.querySelector('#error')
+      let timer
+
+      function render(order) {
+        orderLabel.textContent = `Заказ: ${order.id}`
+        if (order.status === 'paid') {
+          title.textContent = 'Оплата получена'
+          status.textContent = `${order.tier} · ${order.licenseKeys.length} ключ(ей)`
+          status.className = 'status ok'
+          if (order.licenseKeys.length) {
+            keys.textContent = order.licenseKeys.join('\n')
+            keysWrap.hidden = false
+          }
+          if (timer) clearInterval(timer)
+        } else if (order.status === 'pending') {
+          title.textContent = 'Ожидаем оплату'
+          status.textContent = 'Страница обновится автоматически после подтверждения.'
+          status.className = 'status pending'
+        } else {
+          title.textContent = 'Заказ не оплачен'
+          status.textContent = `Статус: ${order.status}`
+          status.className = 'status bad'
+          if (timer) clearInterval(timer)
+        }
+
+        if (order.telegramUrl) {
+          telegram.innerHTML = `Ключи также придут в Telegram: <a href="${order.telegramUrl}">открыть бота</a>`
+        } else {
+          telegram.textContent = 'Ключи будут показаны на этой странице.'
+        }
+      }
+
+      async function poll() {
+        if (!orderId) {
+          title.textContent = 'Заказ не найден'
+          errorBox.textContent = 'В ссылке нет параметра order.'
+          return
+        }
+        try {
+          const response = await fetch(`/api/orders/${encodeURIComponent(orderId)}`)
+          const data = await response.json()
+          if (!response.ok) throw new Error(data.error || 'Заказ не найден')
+          render(data)
+        } catch (error) {
+          errorBox.textContent = error.message
+        }
+      }
+
+      document.querySelector('#copy').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(keys.textContent)
+          document.querySelector('#copy').textContent = 'Скопировано'
+          setTimeout(() => { document.querySelector('#copy').textContent = 'Скопировать' }, 1500)
+        } catch {
+          errorBox.textContent = 'Не удалось скопировать. Выделите ключи вручную.'
+        }
+      })
+
+      poll()
+      timer = setInterval(poll, 3000)
+    </script>
+  </body>
+</html>

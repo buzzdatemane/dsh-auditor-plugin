@@ -1,0 +1,13 @@
+{
+  "name": "dsh-install-hook-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "node -e \"require('node:fs').writeFileSync('EXECUTED','x')\""
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

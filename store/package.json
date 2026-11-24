@@ -1,0 +1,23 @@
+{
+  "name": "dsh-auditor-store",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Crypto checkout and license delivery for dsh-auditor-plugin",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "telegram:setup": "tsx src/scripts/telegram-setup.ts",
+    "btcpay:check": "tsx src/scripts/btcpay-check.ts",
+    "issue-manual": "tsx src/scripts/issue-manual.ts",
+    "bot": "tsx src/scripts/sales-bot.ts",
+    "test": "tsx --test test/license.test.ts test/orders.test.ts test/btcpay.test.ts test/http.test.ts test/manual.test.ts test/sales-bot.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

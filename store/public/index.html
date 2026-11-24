@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DSH Auditor — security gate для DSH-плагинов</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">DSH <span>Auditor</span></div>
+      <a class="ghost" href="https://github.com/buzzdatemane/dsh-auditor-plugin">GitHub</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">READ-ONLY STATIC SECURITY AUDIT</p>
+        <h1>Не ставьте плагин вслепую.</h1>
+        <p class="lead">
+          Проверяет install-скрипты, опасные зависимости, исполнение кода,
+          доступ к файлам и сети. Возвращает score 0–100 и evidence по каждой
+          находке — до установки плагина.
+        </p>
+        <div class="hero-points">
+          <span>без запуска кода плагина</span>
+          <span>JSON / CI / Telegram</span>
+          <span>микро-цены, оплата криптой</span>
+        </div>
+      </section>
+
+      <section class="pricing" id="pricing">
+        <div class="section-head">
+          <h2>Тарифы</h2>
+          <p>Оплата криптой. Один код — один заказ. Пакет Pro ×10 — основной.</p>
+        </div>
+        <p id="dev-note" class="dev-note" hidden>
+          Pro сейчас в разработке: кнопки покупки отключены, пока не готовы
+          платные функции и проверка лицензии.
+        </p>
+        <div id="skus" class="grid" aria-live="polite"></div>
+        <p id="error" class="error" role="alert"></p>
+      </section>
+
+      <section class="how">
+        <h2>Как это работает</h2>
+        <ol>
+          <li>Выбираете тариф и создаёте заказ.</li>
+          <li>Оплачиваете счёт в BTC / USDT / Lightning.</li>
+          <li>После подтверждения получаете ключи в Telegram или на странице заказа.</li>
+          <li>Передаёте ключ в <code>dsh-auditor-plugin</code>.</li>
+        </ol>
+      </section>
+
+      <section class="faq">
+        <h2>Вопросы</h2>
+        <details>
+          <summary>Это подписка?</summary>
+          <p>Нет. Pro и Team — годовые лицензии, Lifetime — бессрочная. Повторная оплата только по желанию.</p>
+        </details>
+        <details>
+          <summary>Почему так дёшево?</summary>
+          <p>Микро-цена для ранних покупателей. Пакет из 10 кодов — основной формат, чтобы одна транзакция покрывала комиссию сети.</p>
+        </details>
+        <details>
+          <summary>Что если ключ потерялся?</summary>
+          <p>Ключ привязан к заказу. Откройте страницу успеха по ссылке из письма или напишите в поддержку с номером заказа.</p>
+        </details>
+        <details>
+          <summary>Есть ли возврат?</summary>
+          <p>Крипто-платежи необратимы. Если ключ не выдан — вернём стоимость или выдадим замену. Ошибочно отправленные средства возвращаются за вычетом сетевой комиссии.</p>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <span>dsh-auditor-plugin · 0.3.0</span>
+      <span>Оплата криптой · без аккаунта</span>
+    </footer>
+
+    <script>
+      const grid = document.querySelector('#skus')
+      const errorBox = document.querySelector('#error')
+      const devNote = document.querySelector('#dev-note')
+      const money = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      })
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+        })[char])
+      }
+
+      function renderSku(sku) {
+        const primary = sku.id === 'pro-10'
+        const available = sku.available !== false
+        const card = document.createElement('article')
+        card.className = primary ? 'card primary' : 'card'
+        if (!available) card.classList.add('disabled')
+        card.innerHTML = `
+          <div class="card-top">
+            <h3>${escapeHtml(sku.label)}</h3>
+            ${!available
+              ? '<span class="badge soon">в разработке</span>'
+              : primary
+                ? '<span class="badge">основной</span>'
+                : ''}
+          </div>
+          <div class="price">${escapeHtml(money.format(sku.amount))}</div>
+          <p>${escapeHtml(sku.description)}</p>
+          <ul>
+            <li>${sku.packSize > 1 ? `${sku.packSize} отдельных ключа` : '1 ключ'}</li>
+            <li>${sku.seats > 1 ? `до ${sku.seats} разработчиков` : '1 разработчик'}</li>
+            <li>${sku.tier === 'lifetime' ? 'бессрочно' : '12 месяцев'}</li>
+          </ul>
+          <button data-sku="${escapeHtml(sku.id)}" ${available ? '' : 'disabled'}>${available ? 'Купить' : 'В разработке'}</button>
+        `
+        if (available) {
+          card.querySelector('button').addEventListener('click', (event) => {
+            buy(sku.id, event.currentTarget)
+          })
+        }
+        return card
+      }
+
+      async function loadSkus() {
+        try {
+          const response = await fetch('/api/skus')
+          if (!response.ok) throw new Error('Не удалось загрузить тарифы')
+          const data = await response.json()
+          grid.replaceChildren(...data.skus.map(renderSku))
+          devNote.hidden = !data.skus.some((sku) => !sku.available)
+        } catch (error) {
+          errorBox.textContent = error.message
+        }
+      }
+
+      async function buy(skuId, button) {
+        errorBox.textContent = ''
+        button.disabled = true
+        button.textContent = 'Создаём счёт…'
+        try {
+          const response = await fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ skuId }),
+          })
+          const data = await response.json()
+          if (!response.ok) throw new Error(data.error || 'Ошибка заказа')
+          window.location.href = data.checkoutUrl
+        } catch (error) {
+          errorBox.textContent = error.message
+          button.disabled = false
+          button.textContent = 'Купить'
+        }
+      }
+
+      loadSkus()
+    </script>
+  </body>
+</html>

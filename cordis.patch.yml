@@ -1,0 +1,9 @@
+# Bundle layer for dsh-auditor-plugin.
+#
+# The DSH launcher applies this file when the package is listed in a profile's
+# package.json -> dsh.profile.bundles (after built-in bundles, before the
+# profile's own cordis.patch.yml). The mounted plugin registers the read-only
+# `audit_plugin` tool against the host tools service.
+- insert:
+    - id: dsh-auditor-plugin
+      name: dsh-auditor-plugin

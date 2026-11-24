@@ -1,0 +1,18 @@
+[Unit]
+Description=dsh-auditor-store
+After=network.target
+
+[Service]
+Type=simple
+User=dshstore
+Group=dshstore
+WorkingDirectory=/opt/dsh-auditor-store
+EnvironmentFile=/opt/dsh-auditor-store/.env
+ExecStart=/usr/bin/node /opt/dsh-auditor-store/dist/index.js
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

